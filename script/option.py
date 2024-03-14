@@ -19,7 +19,8 @@ class Option:
                  n_workers: int,
                  check_keyword: bool,
                  threshold: int,
-                 watcher_year_interval: list
+                 watcher_year_interval: list,
+                 request_timeout: int | None,
                  ) -> None:
         """
         Args:
@@ -34,6 +35,7 @@ class Option:
             n_workers (int): Nombre de threads à utiliser
             check_keyword (bool): Vérifie que les mots clés sont correctement formatés
             threshold (int): Seuil de détection des mots clés
+            request_timeout (int|None): Temps d'attente avant qu'une requête n'expire. None pour désactiver
 
         Returns:
             None
@@ -73,6 +75,10 @@ class Option:
         if watcher_year_interval[0] >= watcher_year_interval[1]:
             raise ValueError("watcher_year_interval[0] must be smaller or equal to watcher_year_interval[1]")
         self.watcher_year_interval = watcher_year_interval
+
+        if not (request_timeout > 0 or request_timeout is None):
+            raise ValueError("request_timeout must be a positive integer")
+        self.request_timeout = request_timeout
     
     @classmethod
     def first_initialization(cls):

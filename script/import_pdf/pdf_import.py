@@ -6,7 +6,11 @@ def url_request(option, url: str, new_name: str = None) -> bool | None:
         print(f"Invalid url: {url}")
         return
 
-    response = requests.get(url)
+    try:
+        response = requests.get(url, timeout=option.request_timeout)
+    except requests.exceptions.Timeout:
+        print(f"Timeout (>{option.request_timeout}s) for {url}")
+        return
     if response.status_code != 200:
         print(f"Failed to download {url}. (Status code: {response.status_code})")
         return
