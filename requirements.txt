@@ -1,0 +1,5 @@
+atpbar==1.1.4
+colorlog==6.8.2
+pandas==1.5.3
+PyPDF2==3.0.1
+validators==0.22.0

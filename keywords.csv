@@ -1,0 +1,7 @@
+Word,Nb min,Nb max,Score if true,Score if false
+charge,1,inf,1,0
+complementaire,1,inf,2,0
+heure,1,inf,2,0
+permanent,1,inf,2,0
+total,1,inf,2,0
+%,3,inf,1,0

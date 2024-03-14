@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="icon" href="script/html/favicon.ico" />
+        <title>PdfShearch - result</title>
+    </head>
+    <body>
+        <h1>Resultats</h1>
+        <div class="content">
+            <div>
+                <p>
+                    <span class="stats">Treads: {{thread}}.</span>
+                    <span class="stats">Temps: {{time}}{{time_by_scan}}.</span>
+                    <span class="stats">
+                        Render at:
+                        <time datetime="{{render_timestamp}}">{{render_timestamp}}</time>
+                    </span>
+                    <br />
+                    <span class="stats">PDF: {{n_pdf}}.</span>
+                    <span class="stats">Total pages: {{total_pages}}.</span>
+                    <span class="stats">Total detected pages: {{detected_pages}}.</span>
+                </p>
+                <details>
+                    <summary>Keywords</summary>
+                    <p>Threshold: {{threshold}} (score minimum à avoir)</p>
+                    {{keywords}}
+                </details>
+            </div>
+            {{table}}
+        </div>
+    </body>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+        .full-width {
+            width: 100%;
+        }
+        .max-score {
+            font-weight: bold;
+            text-decoration: solid underline 0.13em;
+        }
+        th {
+            background-color: #222222;
+            color: white;
+        }
+        th,
+        td {
+            border: 1px solid #999;
+            padding: 8px;
+            text-align: left;
+            font-family: consolas, courier, monospace;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        summary {
+            border: 0.1em solid #999;
+            border-radius: 0.4em;
+            padding: 0.2em 0.3em;
+            width: fit-content;
+            background-color: #f8f8f8;
+            user-select: none;
+            cursor: pointer;
+        }
+        .content > * {
+            margin: 1.5em 0;
+        }
+        .stats {
+            display: inline-block;
+            margin: 0 0.1em;
+        }
+    </style>
+</html>
