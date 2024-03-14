@@ -51,8 +51,8 @@ class Worker(object):
                 else:
                     output = pd.concat([output, new_output], ignore_index=True)
                 self.queue.task_done()
-            except Exception as e:
-                self.logger.put(('error', f"[P{self.worker_id}] {e}"))
+            except Exception as error:
+                self.logger.put(('exception', error))
                 try:
                     self.queue.task_done()
                 except ValueError:
@@ -99,17 +99,21 @@ class Worker(object):
     def format_task(self, pdf_data: dict) -> pd.DataFrame:
         best_score = pdf_data['detected_page']['Score'].max()
         
-        pdf_data['detected_page']['Page'] = pdf_data['detected_page'].apply(
-            lambda x: '<a class="{max_score}" title="Score: {score}" href="{abs_path}#page={page}" target="_blank">{page}</a>'.format(
-                abs_path=pdf_data['abs_path'],
-                page=int(x['Page']),
-                score=x['Score'],
-                max_score='max-score' if x['Score'] == best_score else ''
-            ),
-            axis=1
-        )
+        if len(pdf_data['detected_page']) > 0:
+            pdf_data['detected_page']['Page'] = pdf_data['detected_page'].apply(
+                lambda x: '<a class="{max_score}" title="Score: {score}" href="{abs_path}#page={page}" target="_blank">{page}</a>'.format(
+                    abs_path=pdf_data['abs_path'],
+                    page=int(x['Page']),
+                    score=x['Score'],
+                    max_score='max-score' if x['Score'] == best_score else ''
+                ),
+                axis=1
+            )
+            pdf_data['detected_page'].sort_values(by='Score', ascending=False, inplace=True)
+        else:
+            pdf_data['detected_page']['Page'] = ""
+
         pdf_data['url'] = f'<a class="filename" href="{pdf_data["url"]}" target="_blank">{pdf_data["filename"]}</a>'
-        pdf_data['detected_page'].sort_values(by='Score', ascending=False, inplace=True)
 
         return pd.DataFrame({
             'Filename': [pdf_data['filename']],

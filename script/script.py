@@ -170,6 +170,8 @@ def qlogger(as_started: list, qlog: multiprocessing.SimpleQueue, logger: logging
                 logger.error(message)
             case 'fatal':
                 logger.fatal(message)
+            case 'exception':
+                logger.exception(message)
             case 'started':
                 logger.info(f"[P{message}] Worker has started")
                 as_started[message-1] = True
