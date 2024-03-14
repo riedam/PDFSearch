@@ -28,28 +28,35 @@ class Worker(object):
         self.logger.put(('started', self.worker_id))
         time.sleep(0.5)
         while True:
-            if CancelProcessEvent.is_set():
-                self.logger.put(('info', f"[P{self.worker_id}] Worker has been cancelled"))
-                break
-            try:
-                pdf_data = self.queue.get_nowait()
-            except multiprocessing.queues.Empty:
-                if self.option.watch_import:
-                    time.sleep(1)
-                    continue
-                else:
-                    self.logger.put(('info', f"[P{self.worker_id}] Queue is empty: Stoping worker"))
-                    self.result.put(output)
+            try: # try to catch and print errors in the logger
+                if CancelProcessEvent.is_set():
+                    self.logger.put(('info', f"[P{self.worker_id}] Worker has been cancelled"))
                     break
-            
-            pdf_data = self.scan_task(pdf_data)
-            new_output = self.format_task(pdf_data)
+                try:
+                    pdf_data = self.queue.get_nowait()
+                except multiprocessing.queues.Empty:
+                    if self.option.watch_import:
+                        time.sleep(1)
+                        continue
+                    else:
+                        self.logger.put(('info', f"[P{self.worker_id}] Queue is empty: Stoping worker"))
+                        self.result.put(output)
+                        break
+                
+                pdf_data = self.scan_task(pdf_data)
+                new_output = self.format_task(pdf_data)
 
-            if self.option.watch_import:
-                self.result.put(new_output)
-            else:
-                output = pd.concat([output, new_output], ignore_index=True)
-            self.queue.task_done()
+                if self.option.watch_import:
+                    self.result.put(new_output)
+                else:
+                    output = pd.concat([output, new_output], ignore_index=True)
+                self.queue.task_done()
+            except Exception as e:
+                self.logger.put(('error', f"[P{self.worker_id}] {e}"))
+                try:
+                    self.queue.task_done()
+                except ValueError:
+                    pass
     
     def test(self):
         for _ in atpbar.atpbar(range(50), name=f"{self.worker_id}"):
