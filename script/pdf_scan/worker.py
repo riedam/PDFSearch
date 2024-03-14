@@ -1,4 +1,4 @@
-import os, re, multiprocessing, atpbar, PyPDF2
+import os, re, multiprocessing, atpbar, pypdf
 import pandas as pd
 from unidecode import unidecode
 
@@ -64,7 +64,7 @@ class Worker(object):
     
     def scan_task(self, pdf_data: dict) -> dict:
         with open(pdf_data['path'], 'rb') as pdfFileObj:
-            pdf = PyPDF2.PdfReader(pdfFileObj)
+            pdf = pypdf.PdfReader(pdfFileObj)
 
             pdf_data.update({
                 "filename": os.path.basename(pdf_data['path']),
