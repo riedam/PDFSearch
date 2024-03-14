@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="script/html/favicon.ico" />
+        <link rel="stylesheet" href="script/html/style.css" />
         <title>PdfShearch - result</title>
     </head>
     <body>
@@ -31,46 +32,4 @@
             {{table}}
         </div>
     </body>
-    <style>
-        table {
-            border-collapse: collapse;
-        }
-        .full-width {
-            width: 100%;
-        }
-        .max-score {
-            font-weight: bold;
-            text-decoration: solid underline 0.13em;
-        }
-        th {
-            background-color: #222222;
-            color: white;
-        }
-        th,
-        td {
-            border: 1px solid #999;
-            padding: 8px;
-            text-align: left;
-            font-family: consolas, courier, monospace;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        summary {
-            border: 0.1em solid #999;
-            border-radius: 0.4em;
-            padding: 0.2em 0.3em;
-            width: fit-content;
-            background-color: #f8f8f8;
-            user-select: none;
-            cursor: pointer;
-        }
-        .content > * {
-            margin: 1.5em 0;
-        }
-        .stats {
-            display: inline-block;
-            margin: 0 0.1em;
-        }
-    </style>
 </html>
