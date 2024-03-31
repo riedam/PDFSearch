@@ -17,7 +17,10 @@ def url_request(option, url: str, new_name: str = None) -> bool | None:
     
     if "content-disposition" in response.headers:
         content_disposition = response.headers["content-disposition"]
-        old_name = content_disposition.split("filename=")[1]
+        try:
+            old_name = content_disposition.split("filename=")[1]
+        except IndexError:
+            old_name = url.split("/")[-1]
     else:
         old_name = url.split("/")[-1]
     

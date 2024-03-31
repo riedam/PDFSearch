@@ -51,6 +51,12 @@ class Worker(object):
                 else:
                     output = pd.concat([output, new_output], ignore_index=True)
                 self.queue.task_done()
+
+            except pypdf.errors.PdfStreamError:
+                self.logger.put(('error', f"[P{self.worker_id}] Error while reading \"{os.path.basename(pdf_data['path'])}\" file. File will be removed"))
+                os.remove(pdf_data['path'])
+                self.queue.task_done()
+
             except Exception as error:
                 self.logger.put(('exception', error))
                 try:
