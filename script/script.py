@@ -95,7 +95,6 @@ def main(opt, ini: tuple) -> list:
         if not path.endswith('.pdf'): # Ignore non pdf files
             continue
         if (not option.force_scan) and (pdf in old_data['Filename'].values): # Ignore already scanned pdf
-            logger.info(f"Skipping {pdf} as it has already been scanned")
             n_skip += 1
             continue
         logger.info(f"Adding {pdf} to queue")

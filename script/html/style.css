@@ -23,6 +23,9 @@ td {
     text-align: left;
     font-family: consolas, courier, monospace;
 }
+td > a {
+    text-decoration: none;
+}
 tr:nth-child(even) {
     background-color: #f2f2f2;
 }
