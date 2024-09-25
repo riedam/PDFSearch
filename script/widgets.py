@@ -1,4 +1,4 @@
-import os
+import os, re
 from validators import url as is_url
 from datetime import datetime
 
@@ -56,19 +56,26 @@ def my_widgets(opt, ini: tuple, process: list) -> tuple:
         pane_widths=[3, 1, 2]
     )
 
+    def toggle_widget(new: bool, also_force = False):
+        button_add.disabled = new
+        url.disabled = new
+        year.disabled = new
+        universtity.disabled = new
+        if also_force:
+            button_force_add.disabled = new
+
     def add_script(force: bool = False):
         with output:
             output.clear_output()
-            button_add.disabled = True
-            button_force_add.disabled = True
+            toggle_widget(True, True)
             button_force_add.button_style = ''
             if universtity.value == "":
                 print("Name cannot be empty")
-                button_add.disabled = False
+                toggle_widget(False)
                 return
             if not is_url(url.value):
                 print("URL is not valid")
-                button_add.disabled = False
+                toggle_widget(False)
                 return
             name = f"{universtity.value}_{year.value}.pdf"
             print(f"Adding {name}...")
@@ -76,10 +83,9 @@ def my_widgets(opt, ini: tuple, process: list) -> tuple:
                 if force:
                     print(f"{name} already exists. Forcing download...")
                 else:
-                    button_force_add.disabled = False
                     button_force_add.button_style = 'warning'
                     print(f"{name} already exists. Use force download to download it again.")
-                    button_add.disabled = False
+                    toggle_widget(False, True)
                     return
             result = url_request(opt, url.value, name)
             if result:
@@ -87,13 +93,13 @@ def my_widgets(opt, ini: tuple, process: list) -> tuple:
                 queue.put({
                     "path": os.path.relpath(path),
                     "timestamp": datetime.now(),
-                    "url": url.value
+                    "url": re.sub(r'\?download=true$', '', url.value)
                     })
                 print(f"PDF added to {path}")
                 print(f"PDF added to queue (Queue length: {queue.qsize()})")
                 year.value += 1
                 url.value = ''
-            button_add.disabled = False
+            toggle_widget(False)
 
     def button_add_func(b):
         add_script(False)

@@ -53,6 +53,14 @@ def main(opt, ini: tuple) -> list:
         logger.fatal("Script has already been initialized. Please restart the jupyter kernel to run it again.")
         raise UserWarning("Script has already been initialized. Please restart the jupyter kernel to run it again.")
 
+    if not os.path.isdir(opt.data_folder):
+        logger.info(f"Data folder {opt.data_folder} does exist. Creating it.")
+        os.makedirs(opt.data_folder)
+    
+    if not os.path.isdir(opt.pdf_folder):
+        logger.info(f"Pdf folder {opt.pdf_folder} does not exist. Creating it.")
+        os.makedirs(opt.pdf_folder)
+
     global option
     option = opt
     #option.keywords = pd.DataFrame(columns=['Word', 'Nb min', 'Nb max', 'Score if true', 'Score if false'],
